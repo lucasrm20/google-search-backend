@@ -1,4 +1,5 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, ParseIntPipe, Query } from '@nestjs/common';
+import { SearchResponse } from './interfaces/search-response.interface';
 import { SearchService } from './search.service';
 
 @Controller('/')
@@ -9,7 +10,10 @@ export class SearchController {
   ) {}
 
   @Get()
-  search(@Query('search') searchTerm: string) {
-    return this.searchService.search(searchTerm);
+  search(
+    @Query('search') searchTerm: string,
+    @Query('offset', ParseIntPipe) offset: number
+  ): Promise<SearchResponse[]> {
+    return this.searchService.search(searchTerm, offset);
   }
 }
